@@ -3,41 +3,33 @@
 # flake8: noqa
 """
 Unit tests for Morse Code Decoder.
-
 Students should not modify this file.
 """
 __author__ = 'madarp'
-
 import sys
 import unittest
 import importlib
 import subprocess
-
-
 # Kenzie devs: change this to 'soln.morse' to test solution
 PKG_NAME = 'morse'
-
 # some handy morse strings
 # HEY JUDE
 morse_hey_jude = '.... . -.--   .--- ..- -.. .'
 # THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.
-morse_quick_fox = '- .... .  --.- ..- .. -.-. -.-  -... .-. --- .-- -.  ..-. --- -..-  .--- ..- -- .--. ...  --- ...- . .-.  - .... .  .-.. .- --.. -.--  -.. --- --. .-.-.-'
+morse_quick_fox = '- .... .   --.- ..- .. -.-. -.-   -... .-. --- .-- -.   ..-. --- -..-   .--- ..- -- .--. ...   --- ...- . .-.   - .... .   .-.. .- --.. -.--   -.. --- --. .-.-.-'
 
 
 class TestDecodeMorse(unittest.TestCase):
     """Only tests the decode_morse() function"""
-
     @classmethod
     def setUpClass(cls):
         """Performs module import and suite setup at test-runtime"""
         cls.assertGreaterEqual(cls, sys.version_info[0], 3)
         cls.module = importlib.import_module(PKG_NAME)
-
     def test_hey_jude(self):
         """Check basic HEY JUDE"""
         actual = self.module.decode_morse(morse_hey_jude)
         self.assertEqual(actual, 'HEY JUDE')
-
     def test_basic_letters(self):
         """Check Basic Morse decoding"""
         self.assertEqual(self.module.decode_morse('.-'), 'A')
@@ -48,27 +40,22 @@ class TestDecodeMorse(unittest.TestCase):
         self.assertEqual(self.module.decode_morse('...---...'), 'SOS')
         self.assertEqual(self.module.decode_morse('... --- ...'), 'SOS')
         self.assertEqual(self.module.decode_morse('...   ---   ...'), 'S O S')
-
     def test_extra_spaces(self):
         """Check handling of spaces"""
         self.assertEqual(self.module.decode_morse(' . '), 'E')
         self.assertEqual(self.module.decode_morse('   .   . '), 'E E')
-
     def test_complex(self):
         """Check long message decoding"""
         morse = '      ...---... -.-.--   - .... .   --.- ..- .. -.-. -.-   -... .-. --- .-- -.   ..-. --- -..-   .--- ..- -- .--. ...   --- ...- . .-.   - .... .  '            ' .-.. .- --.. -.--   -.. --- --. .-.-.-  '
         actual = self.module.decode_morse(morse)
         self.assertEqual(actual, 'SOS! THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.')
-
     def test_flake8(self):
         """Checking for PEP8/flake8 compliance"""
         result = subprocess.run(['flake8', self.module.__file__])
         self.assertEqual(result.returncode, 0)
-
     def test_author_string(self):
         """Checking for __author__ string"""
         self.assertNotEqual(self.module.__author__, '???')
-
     
 class TestDecodeBits(unittest.TestCase):
     @classmethod
@@ -81,26 +68,18 @@ class TestDecodeBits(unittest.TestCase):
         """Check if ET PHONE HOME can be transcoded to Morse"""
         bits = '11000000111111000000000000001100111111001111110011000000110011001100110000001111110011111100111111000000111111001100000011000000000000001100110011001100000011111100111111001111110000001111110011111100000011'
         morse = self.module.decode_bits(bits)
-        self.assertEqual(morse, '. -  .--. .... --- -. .  .... --- -- .')
+        self.assertEqual(morse, '. -   .--. .... --- -. .   .... --- -- .')
 
     def test_hey_jude_2x(self):
         """Check if HEY JUDE can be transcoded to Morse"""
-        bits = '11001100110011000000110000001111110011001111110011111100000000000000000000011001111110011111100111111000000110011001111110000001111110011001100000011'
+        bits = '1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011'
         morse = self.module.decode_bits(bits)
         self.assertEqual(morse, morse_hey_jude)
 
     def test_hey_jude_6x(self):
-        bits = (
-            '1111110000001111110000001111'
-            '11000000111111000000000000000000111111000000000000000000111111111111'
-            '11111100000011111100000011111111111111111100000011111111111111111100'
-            '00000000000000000000000000000000000000001111110000001111111111111111'
-            '110000001111111111111111110000001111111111111111110000000000000000001'
-            '111110000001111110000001111111111111111110000000000000000001111111111'
-            '11111111000000111111000000111111000000000000000000111111'
-        )
+        bits = '111111000000111111000000111111000000111111000000000000000000111111000000000000000000111111111111111111000000111111000000111111111111111111000000111111111111111111000000000000000000000000000000000000000000111111000000111111111111111111000000111111111111111111000000111111111111111111000000000000000000111111000000111111000000111111111111111111000000000000000000111111111111111111000000111111000000111111000000000000000000111111'
         morse = self.module.decode_bits(bits)
-        self.assertEqual(morse, '.... . -.--  .--- ..- -.. .')
+        self.assertEqual(morse, morse_hey_jude)
 
     def test_basic_bits(self):
         """Check short letters transcoding to Morse"""
@@ -109,7 +88,6 @@ class TestDecodeBits(unittest.TestCase):
         self.assertEqual(self.module.decode_bits('10001'), '. .')  # E E
         self.assertEqual(self.module.decode_bits('10111'), '.-')  # A
         self.assertEqual(self.module.decode_bits('1110111'), '--')  # M
-
     def test_multiple_bits_per_dot(self):
         """Multiple bits per dot handling"""
         self.assertEqual(self.module.decode_bits('111'), '.')  # E
@@ -120,12 +98,10 @@ class TestDecodeBits(unittest.TestCase):
         self.assertEqual(self.module.decode_bits('111000000000111'), '. .')  # EE
         self.assertEqual(self.module.decode_bits('11111100111111'), '--')  # M
         self.assertEqual(self.module.decode_bits('111000111000111'), '...')  # S
-
     def test_extra_zeroes(self):
         """Check handling of leading and trailing zeros"""
         self.assertEqual(self.module.decode_bits('01110'), '.')
         self.assertEqual(self.module.decode_bits('000000011100000'), '.')
-
     def test_long_message_1x(self):
         """Check long message at 1x time unit"""
         bits = (
@@ -139,7 +115,6 @@ class TestDecodeBits(unittest.TestCase):
         )
         actual = self.module.decode_bits(bits)
         self.assertEqual(actual, morse_quick_fox)
-
     def test_long_message_5x(self):
         bits = (
             '1111111111111110000000000000001111100000111110000011111000001111'
@@ -169,7 +144,5 @@ class TestDecodeBits(unittest.TestCase):
         )
         actual = self.module.decode_bits(bits)
         self.assertEqual(actual, morse_quick_fox)
-
-
 if __name__ == '__main__':
     unittest.main(verbosity=2)
